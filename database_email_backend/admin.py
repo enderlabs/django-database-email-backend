@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django import forms
 from django.http import HttpResponse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.mail import message
 from django.db.models import Count
 from django.utils.translation import ugettext as _

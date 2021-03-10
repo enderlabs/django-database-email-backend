@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import django.db.models.deletion
 from django.db import models, migrations
 import database_email_backend.fields
 
@@ -39,7 +40,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='attachment',
             name='email',
-            field=models.ForeignKey(related_name='attachments', to='database_email_backend.Email'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='attachments', to='database_email_backend.Email'),
         ),
         migrations.CreateModel(
             name='SendEmail',
