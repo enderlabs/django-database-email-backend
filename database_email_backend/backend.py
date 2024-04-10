@@ -2,7 +2,7 @@
 from email.mime.base import MIMEBase
 
 from django.core.mail.backends.base import BaseEmailBackend
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 from database_email_backend.models import Email, Attachment
 
@@ -18,7 +18,7 @@ class DatabaseEmailBackend(BaseEmailBackend):
                 all_recipients=u', '.join(message.recipients()),
                 subject=u'%s' % message.subject,
                 body=u'%s' % message.body,
-                raw=u'%s' % smart_text(message.message().as_string()),
+                raw=u'%s' % smart_str(message.message().as_string()),
                 reply_to=u', '.join(message.reply_to)
             )
             for attachment in message.attachments:

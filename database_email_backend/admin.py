@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.core.mail import message
 from django.db.models import Count
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.template.defaultfilters import linebreaks_filter
 
 from database_email_backend.models import Email, Attachment
@@ -72,7 +72,7 @@ class EmailAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urlpatterns = super(EmailAdmin, self).get_urls()
-        from django.conf.urls import url, include
+        from django.urls import re_path
 
         def wrap(view):
             def wrapper(*args, **kwargs):
@@ -82,7 +82,7 @@ class EmailAdmin(admin.ModelAdmin):
         appname = self.model._meta.app_label
 
         urlpatterns = [
-            url(r'^(?P<email_id>\d+)/attachments/(?P<attachment_id>\d+)/'
+            re_path(r'^(?P<email_id>\d+)/attachments/(?P<attachment_id>\d+)/'
                 r'(?P<filename>[\w.]+)$',
                 wrap(self.serve_attachment),
                 name='%s_email_attachment' % appname)
