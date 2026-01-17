@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from functools import update_wrapper
 
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.contrib import admin
 from django import forms
@@ -10,6 +11,8 @@ from django.core.mail import message
 from django.db.models import Count
 from django.utils.translation import gettext as _
 from django.template.defaultfilters import linebreaks_filter
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 from database_email_backend.models import Email, Attachment
 
@@ -40,9 +43,7 @@ class AttachmentInlineAdmin(admin.TabularInline):
             'filename': str(obj.filename)
             }
         url = reverse(url_name, kwargs=kwargs)
-        return u'<a href="%(url)s">%(fname)s</a>' % {'fname': obj.filename,
-                                                     'url': url}
-    file_link.allow_tags = True
+        return format_html('<a href="{}">{}</a>', url, obj.filename)
 
 
 class EmailAdmin(admin.ModelAdmin):
@@ -55,8 +56,8 @@ class EmailAdmin(admin.ModelAdmin):
                                       'all_recipients', 'headers', 'body_br',)
     inlines = (AttachmentInlineAdmin,)
 
-    def queryset(self, request):
-        queryset = super(EmailAdmin, self).queryset(request)
+    def get_queryset(self, request):
+        queryset = super(EmailAdmin, self).get_queryset(request)
         return queryset.annotate(attachment_count_cache=Count('attachments'))
 
     def attachment_count(self, obj):
@@ -104,8 +105,7 @@ class EmailAdmin(admin.ModelAdmin):
         return response
 
     def body_br(self, obj):
-        return linebreaks_filter(obj.body)
-    body_br.allow_tags = True
+        return mark_safe(linebreaks_filter(obj.body))
     body_br.short_description = 'body'
     body_br.admin_order_field = 'body'
 
