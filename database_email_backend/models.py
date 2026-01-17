@@ -17,8 +17,8 @@ class Email(models.Model):
     body = models.TextField(blank=True, default='')
     raw = models.TextField(blank=True, default='')
 
-    def __unicode__(self):
-        return u'Email from "%s" to "%s" sent at %s about "%s"' % (
+    def __str__(self):
+        return 'Email from "%s" to "%s" sent at %s about "%s"' % (
             self.from_email,
             self.to_emails,
             self.sent_at,
