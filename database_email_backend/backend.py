@@ -11,15 +11,15 @@ class DatabaseEmailBackend(BaseEmailBackend):
     def send_messages(self, email_messages):
         for message in email_messages:
             email = Email.objects.create(
-                from_email=u'%s' % message.from_email,
-                to_emails=u', '.join(message.to),
-                cc_emails=u', '.join(message.cc),
-                bcc_emails=u', '.join(message.bcc),
-                all_recipients=u', '.join(message.recipients()),
-                subject=u'%s' % message.subject,
-                body=u'%s' % message.body,
-                raw=u'%s' % smart_str(message.message().as_string()),
-                reply_to=u', '.join(message.reply_to)
+                from_email=str(message.from_email),
+                to_emails=', '.join(message.to),
+                cc_emails=', '.join(message.cc),
+                bcc_emails=', '.join(message.bcc),
+                all_recipients=', '.join(message.recipients()),
+                subject=str(message.subject),
+                body=str(message.body),
+                raw=str(smart_str(message.message().as_string())),
+                reply_to=', '.join(message.reply_to)
             )
             for attachment in message.attachments:
                 if isinstance(attachment, tuple):
